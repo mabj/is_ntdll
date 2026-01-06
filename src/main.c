@@ -53,6 +53,9 @@ BOOL verify_ntdll_32(LPBYTE p_base, PIMAGE_NT_HEADERS32 p_nt_headers32) {
     if (name_offset == 0) return FALSE;
     if (_stricmp((char*)(p_base + name_offset), "ntdll.dll") != 0) return FALSE;
     
+    // Check if DLL exports at least 800 functions (NT 3.1 had 812)
+    if (p_export_dir->NumberOfFunctions < 800) return FALSE;
+    
     // Verify NtClose export exists
     return check_ntclose_export(p_base, p_export_dir, sections, num_sections);
 }
@@ -75,6 +78,9 @@ BOOL verify_ntdll_64(LPBYTE p_base, PIMAGE_NT_HEADERS64 p_nt_headers64) {
     DWORD name_offset = rva_to_offset(sections, num_sections, p_export_dir->Name);
     if (name_offset == 0) return FALSE;
     if (_stricmp((char*)(p_base + name_offset), "ntdll.dll") != 0) return FALSE;
+    
+    // Check if DLL exports at least 800 functions (NT 3.1 had 812)
+    if (p_export_dir->NumberOfFunctions < 800) return FALSE;
     
     // Verify NtClose export exists
     return check_ntclose_export(p_base, p_export_dir, sections, num_sections);
