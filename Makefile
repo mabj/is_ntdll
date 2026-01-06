@@ -1,0 +1,27 @@
+MAIN_NAME=is_ntdll
+
+CC32 = i686-w64-mingw32-gcc -m32
+CC64 = x86_64-w64-mingw32-gcc -m64
+CFLAGS = -Wall -Wextra -std=c99 -static -Wno-missing-field-initializers -Wno-cast-function-type -Wno-unused-label -Wno-unused-parameter -masm=intel
+OPTIMIZATION_FLAGS = -Os -s -ffunction-sections -fdata-sections -fno-ident
+LDFLAGS = -lshlwapi
+
+all: build-x86 build-amd64
+
+build-image:
+	docker build . -t ${MAIN_NAME}
+
+build:
+	docker run -it -m 4g --rm -v $(shell pwd):/experiment -w /experiment ${MAIN_NAME} make
+
+build-amd64:
+	$(CC64) -o bin/is_ntdll_amd64.exe src/main.c $(CFLAGS) ${OPTIMIZATION_FLAGS} $(LDFLAGS)
+
+build-x86: clean
+	$(CC32) -o bin/is_ntdll_x86.exe src/main.c $(CFLAGS) ${OPTIMIZATION_FLAGS} $(LDFLAGS)
+
+enter: clean
+	docker run -it -m 4g --rm -v $(shell pwd):/experiment -w /experiment --entrypoint /bin/bash ${MAIN_NAME}
+
+clean:
+	rm -rf bin/is_ntdll_*.exe
