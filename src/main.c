@@ -134,8 +134,6 @@ int main(int argc, char* argv[]) {
     }
 
     const char* path = argv[1];
-    printf("[*] Checking: %s\n", path);
-    
     if (is_ntdll(path)) {
         printf("TRUE\n");
     } else {
