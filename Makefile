@@ -4,7 +4,7 @@ CC32 = i686-w64-mingw32-gcc -m32
 CC64 = x86_64-w64-mingw32-gcc -m64
 CFLAGS = -Wall -Wextra -std=c99 -static -Wno-missing-field-initializers -Wno-cast-function-type -Wno-unused-label -Wno-unused-parameter -masm=intel
 OPTIMIZATION_FLAGS = -Os -s -ffunction-sections -fdata-sections -fno-ident
-LDFLAGS = -lshlwapi
+LDFLAGS =
 
 all: build-x86 build-amd64
 
